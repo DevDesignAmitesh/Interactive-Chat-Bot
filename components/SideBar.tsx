@@ -2,18 +2,28 @@
 
 import {
   Code,
-  ImageIcon,
   LayoutDashboard,
   MessageSquare,
-  Music,
   Settings,
-  VideoIcon,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { Progress } from "./ui/progress";
+import { Button } from "./ui/button";
+import useSWR from "swr";
 
 const SideBar = () => {
+  const fetcher = async (url: string) => {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Failed to fetch data");
+    const data = await res.json();
+    return data.count;
+  };
+
+  const { data: count } = useSWR("/api/getApiCount", fetcher);
+
   const routes = [
     {
       label: "Dashboard",
@@ -32,11 +42,6 @@ const SideBar = () => {
       icon: Code,
       href: "/code",
       color: "text-green-700",
-    },
-    {
-      label: "Settings",
-      icon: Settings,
-      href: "/settings",
     },
   ];
 
@@ -64,6 +69,19 @@ const SideBar = () => {
             </div>
           </Link>
         ))}
+      </div>
+      <div className="bg-black/60 text-white w-full absolute bottom-10 flex flex-col justify-center items-center p-5">
+        <div className="flex flex-col gap-2 justify-center items-center">
+          <p className="whitespace-nowrap">{count} / 3 Free Generations</p>
+          <Progress
+            className="h-3 bg-white fill-blue-600"
+            value={(count! / 3) * 100}
+          />
+        </div>
+        <Button variant={"premium"} className="mt-4 cursor-not-allowed">
+          <Zap fill="white" />
+          Upgrade
+        </Button>
       </div>
     </div>
   );

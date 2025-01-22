@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
 import SideBar from "./SideBar";
 
 const MobileSideBar = () => {
@@ -19,7 +19,9 @@ const MobileSideBar = () => {
     <>
       <Sheet>
         <SheetTrigger>
-          <GiHamburgerMenu size={20} />
+          <SheetTitle>
+            <GiHamburgerMenu size={20} />
+          </SheetTitle>
         </SheetTrigger>
         <SheetContent
           side={"left"}

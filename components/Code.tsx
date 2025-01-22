@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Modal from "./Modal";
 import ReactMarkdown from "react-markdown";
+import { useRouter } from "next/navigation";
 
 interface MessageProps {
   message: string;
@@ -16,22 +17,31 @@ const CodePage = () => {
   const [userMsg, setUserMsg] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [messages, setMessage] = useState<MessageProps[]>([]);
+  const router = useRouter();
 
   const handleAddMessage: any = async () => {
-    setLoading(true);
-    const res = await axios.post("/api/code", { prompt: userMsg });
-    const data = res.data.result;
-    setLoading(false);
-
-    setMessage((prevMsg: any) => [
-      {
-        message: data,
-      },
-      ...prevMsg,
-    ]);
-
-    setUserMsg("");
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/code", { prompt: userMsg });
+      const data = res.data.result;
+      setMessage((prevMsg: any) => [
+        {
+          message: data,
+        },
+        ...prevMsg,
+      ]);
+      setLoading(false);
+      setUserMsg("");
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      return;
+    } finally {
+      setLoading(false);
+      router.refresh();
+    }
   };
+
   return (
     <div className="md:pl-72 w-full">
       <Heading

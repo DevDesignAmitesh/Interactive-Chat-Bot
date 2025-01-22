@@ -2,6 +2,7 @@ import { auth } from "@/providers/auth";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import { checkApiLimit, increaseApiLimit } from "../actions/route";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -36,9 +37,17 @@ export async function POST(req: NextRequest) {
 
     // Validate the input
     if (!prompt) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+    }
+
+    const res = await checkApiLimit();
+
+    if (res) {
       return NextResponse.json(
-        { error: "Invalid input" },
-        { status: 400 }
+        {
+          message: "free tire completed",
+        },
+        { status: 403 }
       );
     }
 
@@ -58,6 +67,8 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    await increaseApiLimit();
 
     return NextResponse.json({ result: generatedText });
   } catch (error: any) {

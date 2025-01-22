@@ -2,6 +2,7 @@ import { auth } from "@/providers/auth";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import { checkApiLimit, increaseApiLimit } from "../actions/route";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -42,6 +43,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
+    const res = await checkApiLimit();
+
+    if (res) {
+      return NextResponse.json(
+        {
+          message: "free tire completed",
+        },
+        { status: 403 }
+      );
+    }
+
     // Call the OpenAI API using the `chat.completions.create` method
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo", // Use the desired model, e.g., 'gpt-4' or 'gpt-3.5-turbo'
@@ -61,6 +73,8 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    await increaseApiLimit();
 
     return NextResponse.json({ result: generatedText });
   } catch (error: any) {
