@@ -1,20 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
 import SideBar from "./SideBar";
 
 const MobileSideBar = () => {
-  const [isMounted, setIsMounted] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
   return (
     <>
       <Sheet>

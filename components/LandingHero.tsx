@@ -20,17 +20,11 @@ const LandingHero = () => {
           />
         </div>
       </div>
-      <p className="text-zinc-500 text-[13px]">
-        Create content using AI 10x faster.
-      </p>
       <Link href="/auth">
         <Button className="mt-4" variant={"premium"}>
           Start Generating For Free.
         </Button>
       </Link>
-      <p className="text-zinc-500 mt-3 text-[13px]">
-        No credit card required.
-      </p>
     </div>
   );
 };

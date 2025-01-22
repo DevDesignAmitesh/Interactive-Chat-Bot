@@ -1,13 +1,21 @@
 "use client";
 
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 import Heading from "@/components/Heading";
 import { Button } from "@/components/ui/button";
 import { Code } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "./Modal";
 import ReactMarkdown from "react-markdown";
 import { useRouter } from "next/navigation";
+import { IoMdMic, IoMdVolumeHigh } from "react-icons/io";
 
 interface MessageProps {
   message: string;
@@ -17,7 +25,56 @@ const CodePage = () => {
   const [userMsg, setUserMsg] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [messages, setMessage] = useState<MessageProps[]>([]);
+  const [isListening, setIsListening] = useState<boolean>(false);
+  const [recognition, setRecognition] = useState<any>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (SpeechRecognition) {
+        const recognitionInstance = new SpeechRecognition();
+        recognitionInstance.lang = "en-US";
+
+        recognitionInstance.onstart = () => {
+          setIsListening(true); // Show listening popup when recognition starts
+        };
+
+        recognitionInstance.onresult = (e: any) => {
+          const transcript = e.results[0][0].transcript;
+          setUserMsg(transcript);
+        };
+
+        recognitionInstance.onerror = (err: any) => {
+          console.error("Speech Recognition Error:", err);
+        };
+
+        recognitionInstance.onend = () => {
+          setIsListening(false); // Hide listening popup when recognition ends
+        };
+
+        setRecognition(recognitionInstance); // Set the instance to state
+      } else {
+        console.error(
+          "Speech Recognition API is not supported in this browser."
+        );
+      }
+    }
+  }, []);
+
+  const speak = (text: string) => {
+    const TEXT_TO_SPEECH = new SpeechSynthesisUtterance(text);
+
+    // Set properties
+    TEXT_TO_SPEECH.volume = 1;
+    TEXT_TO_SPEECH.rate = 1;
+    TEXT_TO_SPEECH.pitch = 1;
+    TEXT_TO_SPEECH.lang = "hi-GB";
+
+    window.speechSynthesis.speak(TEXT_TO_SPEECH);
+  };
 
   const handleAddMessage: any = async () => {
     try {
@@ -56,10 +113,22 @@ const CodePage = () => {
           value={userMsg}
           onChange={(e) => setUserMsg(e.target.value)}
           type="text"
-          placeholder="Make button toggler using react hooks...."
+          placeholder={
+            isListening
+              ? "Listening...."
+              : "Make button toggler using react hooks...."
+          }
           className="py-2 w-full px-4 border rounded-md placeholder:text-black/50 border-gray-400"
         />
-        <Button onClick={handleAddMessage}>Generate</Button>
+        <div className="flex justify-center items-center gap-4">
+          <button
+            onClick={() => recognition?.start()}
+            className="px-4 py-2 hover:opacity-80 bg-black/90 text-white rounded-md"
+          >
+            <IoMdMic className="md:text-2xl text-xl" />
+          </button>
+          <Button onClick={handleAddMessage}>Generate</Button>
+        </div>
       </div>
 
       {loading ? (
@@ -91,6 +160,10 @@ const CodePage = () => {
                 >
                   {msg.message}
                 </ReactMarkdown>
+                <IoMdVolumeHigh
+                  onClick={() => speak(msg.message)}
+                  className="text-2xl text-black ml-2 cursor-pointer hover:opacity-80"
+                />
               </div>
             ))}
           </div>
