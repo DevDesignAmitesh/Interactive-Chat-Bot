@@ -15,39 +15,11 @@ import React from "react";
 const DashBoard = () => {
   const routes = [
     {
-      label: "Dashboard",
-      icon: LayoutDashboard,
-      href: "/dashboard",
-      color: "text-sky-500",
-      bg: "bg-sky-500/10",
-    },
-    {
       label: "Conversation",
       icon: MessageSquare,
       href: "/conversation",
       color: "text-violet-500",
       bg: "bg-violet-500/10",
-    },
-    {
-      label: "Image Generation",
-      icon: ImageIcon,
-      href: "/image",
-      color: "text-pink-500",
-      bg: "bg-pink-500/10",
-    },
-    {
-      label: "Video Generation",
-      icon: VideoIcon,
-      href: "/video",
-      color: "text-orange-500",
-      bg: "bg-orange-500/10",
-    },
-    {
-      label: "Music Generation",
-      icon: Music,
-      href: "/music",
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10",
     },
     {
       label: "Code Generation",

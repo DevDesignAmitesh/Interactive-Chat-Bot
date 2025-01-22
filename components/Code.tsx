@@ -35,6 +35,8 @@ const CodePage = () => {
   return (
     <div className="md:pl-72 w-full">
       <Heading
+        textColor="bg-green/500"
+        bgColor="bg-green-500/10"
         label="Code Generation"
         description="Generate code using descriptive text"
         icon={Code}

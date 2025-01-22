@@ -34,6 +34,8 @@ const Conversation = () => {
   return (
     <div className="md:pl-72 w-full">
       <Heading
+        textColor="text-violet-500"
+        bgColor="bg-violet-500/10"
         label="Conversation"
         description="Our most advanced conversation model"
         icon={MessageSquare}

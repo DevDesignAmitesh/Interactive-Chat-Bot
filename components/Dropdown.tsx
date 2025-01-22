@@ -1,50 +1,54 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
 
 interface DropdownProps {
-  items: string[]; // List of items in the dropdown
-  value: string; // The current selected value
-  onChange: (e: any) => void; // Callback for when an item is selected and value changes
-  defaultLabel: string; // Default label for the dropdown before a selection
+  label: string;
+  options: string[];
+  onSelect: (e: any) => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ items, value, onChange, defaultLabel }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const Dropdown = ({ label, options, onSelect }: DropdownProps) => {
+  const [selected, setSelected] = useState(label);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleSelect = (item: string) => {
-    onChange(item); // Update the selected value
-    setIsOpen(false); // Close the dropdown after selection
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  const handleSelect = (option: string) => {
+    setSelected(option);
+    setIsOpen(false);
+    onSelect(option);
   };
 
   return (
-    <div className="relative inline-block text-left">
-      {/* Dropdown Trigger */}
+    <div className="relative inline-block text-left px-1 w-full">
+      {/* Dropdown Header */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="bg-white text-[14px] text-black border whitespace-nowrap border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none"
+        onClick={toggleDropdown}
+        className="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        {value || defaultLabel} {/* Display selected value or default label */}
+        <span className="mr-2 text-[13px]">{selected}</span>
+        <FaChevronDown
+          className={`transform transition-transform duration-300 ${
+            isOpen ? "rotate-180" : "rotate-0"
+          }`}
+        />
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Options */}
       {isOpen && (
-        <div
-          className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10"
-          onClick={() => setIsOpen(false)}
-        >
-          <ul className="py-1">
-            {items.map((item, index) => (
-              <li
-                key={index}
-                onClick={() => handleSelect(item)}
-                className="px-4 py-2 text-sm text-black hover:bg-gray-100 cursor-pointer"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="absolute mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto z-10">
+          {options.map((option) => (
+            <li
+              key={option}
+              onClick={() => handleSelect(option)}
+              className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+            >
+              {option}
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
