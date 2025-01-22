@@ -2,7 +2,7 @@ import { auth } from "@/providers/auth";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { checkApiLimit, increaseApiLimit } from "../actions/route";
+import { checkApiLimit, increaseApiLimit } from "../actions/hook";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
