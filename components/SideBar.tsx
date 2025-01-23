@@ -49,7 +49,7 @@ const SideBar = () => {
   return (
     <div className="fixed left-0 top-0 bottom-0 h-full w-52 md:w-72 bg-background text-text">
       <h1 className="text-3xl p-4 font-bold absolute">
-        AI Platform
+        Ineractive Chat Bot
       </h1>
       <div className="absolute top-32 w-full flex flex-col">
         {routes.map((r) => (
