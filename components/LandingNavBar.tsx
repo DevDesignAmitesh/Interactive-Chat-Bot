@@ -4,10 +4,10 @@ import Link from "next/link";
 
 const LandingNavBar = async () => {
   return (
-    <div className=" absolute top-0 w-full p-5 sm:px-10 md:px-20 flex justify-between items-center">
+    <div className="dark absolute top-0 w-full p-5 sm:px-10 md:px-20 flex justify-between items-center">
       <h1 className="text-2xl font-bold">AI Platform</h1>
       <Link href="/auth">
-        <Button variant={"secondary"}>Get Started</Button>
+        <Button className="bg-secondary-btn text-secondary-btn-text" >Get Started</Button>
       </Link>
     </div>
   );

@@ -8,7 +8,7 @@ import { signOut } from "next-auth/react";
 
 const NavBar = () => {
   return (
-    <div className="flex w-full p-5 justify-between items-start">
+    <div className="flex bg-background text-text w-full p-5 justify-between items-start">
       <MobileSideBar />
       <div className="flex justify-center items-center gap-4">
         <Button onClick={() => signOut()}>Log out</Button>

@@ -100,7 +100,7 @@ const CodePage = () => {
   };
 
   return (
-    <div className="md:pl-72 w-full">
+    <div className="md:pl-72 w-full bg-background text-text">
       <Heading
         textColor="bg-green/500"
         bgColor="bg-green-500/10"
@@ -118,12 +118,12 @@ const CodePage = () => {
               ? "Listening...."
               : "Make button toggler using react hooks...."
           }
-          className="py-2 w-full px-4 border rounded-md placeholder:text-black/50 border-gray-400"
+          className="py-2 w-full bg-transparent text-text px-4 border rounded-md placeholder:text-text/50 border-gray-400"
         />
         <div className="flex justify-center items-center gap-4">
           <button
             onClick={() => recognition?.start()}
-            className="px-4 py-2 hover:opacity-80 bg-black/90 text-white rounded-md"
+            className="px-4 py-2 hover:opacity-80 bg-secondary-btn text-secondary-btn-text rounded-md"
           >
             <IoMdMic className="md:text-2xl text-xl" />
           </button>
@@ -143,7 +143,7 @@ const CodePage = () => {
             {messages.map((msg: MessageProps, index: number) => (
               <div
                 key={index}
-                className="flex gap-5 bg-gray-200 p-4 mb-4 rounded-md"
+                className="flex gap-5 border-2 border-color bg-secondary-btn text-secondary-btn-text p-4 mb-4 rounded-md"
               >
                 <ReactMarkdown
                   components={{
@@ -162,7 +162,7 @@ const CodePage = () => {
                 </ReactMarkdown>
                 <IoMdVolumeHigh
                   onClick={() => speak(msg.message)}
-                  className="text-2xl text-black ml-2 cursor-pointer hover:opacity-80"
+                  className="text-2xl text-text ml-2 cursor-pointer hover:opacity-80"
                 />
               </div>
             ))}

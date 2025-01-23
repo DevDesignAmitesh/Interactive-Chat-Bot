@@ -3,6 +3,7 @@
 import {
   ArrowRight,
   Code,
+  Image,
   MessageSquare,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,6 +25,13 @@ const DashBoard = () => {
       color: "text-green-700",
       bg: "bg-green-700/10",
     },
+    {
+      label: "Image Generation",
+      icon: Image,
+      href: "/image",
+      color: "text-pink-700",
+      bg: "bg-pink-700/10",
+    },
   ];
 
   const router = useRouter();
@@ -43,7 +51,7 @@ const DashBoard = () => {
             <div
               key={r.href}
               onClick={() => router.push(r.href)}
-              className="flex w-full py-2 px-4 cursor-pointer border-black/50 border rounded-md hover:shadow-lg justify-between items-center"
+              className="flex w-full py-2 px-4 cursor-pointer border-color border rounded-md hover:shadow-lg justify-between items-center"
             >
               <div className="flex justify-center items-center gap-4">
                 <r.icon

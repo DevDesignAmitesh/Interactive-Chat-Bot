@@ -4,7 +4,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <main className="w-full text-white relative flex justify-center h-screen bg-[#121824]">
+    <main className="dark w-full bg-background text-text relative flex justify-center h-screen ">
       <LandingNavBar />
       <LandingHero />
     </main>

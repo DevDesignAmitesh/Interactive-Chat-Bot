@@ -17,6 +17,26 @@ body {
   height: 100%;
 }
 
+.light {
+  --background: #f5f5f5;
+  --text: black;
+  --secondary-btn: #000;
+  --secondary-btn-text: #fff;
+  --primary-btn: #000;
+  --primary-btn-text: #fff;
+  --border-color: rgb(36, 34, 34);
+}
+
+.dark {
+  --background: #1e1e1e;
+  --text: white;
+  --secondary-btn: #fff;
+  --secondary-btn-text: #000;
+  --primary-btn: #fff;
+  --primary-btn-text: #000;
+  --border-color: gray;
+}
+
 @layer base {
   :root {
     --radius: 0.5rem;

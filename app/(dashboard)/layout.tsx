@@ -8,7 +8,7 @@ export default async function DahBoardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <body className="w-full relative">
+    <body className="w-full relative dark bg-background text-text">
       <SessionProviderPage>
         <NavBar />
         {children}

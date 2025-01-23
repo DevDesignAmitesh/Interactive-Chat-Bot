@@ -7,8 +7,8 @@ import { FcGoogle } from "react-icons/fc";
 
 const page = () => {
   return (
-    <div className="flex h-full justify-center items-center">
-      <Button onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+    <div className="dark flex bg-background text-text w-full h-screen justify-center items-center">
+      <Button className="bg-background text-text" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
         <p>Sign in with google</p>
         <FcGoogle />
       </Button>

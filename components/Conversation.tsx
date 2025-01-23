@@ -8,23 +8,16 @@ declare global {
 }
 
 import Heading from "@/components/Heading";
-import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Modal from "./Modal";
 import { useRouter } from "next/navigation";
 import { IoMdMic, IoMdVolumeHigh } from "react-icons/io";
-
-interface MessageProps {
-  message: string;
-}
+import { FaRobot } from "react-icons/fa";
 
 const Conversation = () => {
-  const [userMsg, setUserMsg] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [messages, setMessage] = useState<MessageProps[]>([]);
-  const [isListening, setIsListening] = useState<boolean>(false);
+  const [messages, setMessages] = useState<string[]>([]);
   const [recognition, setRecognition] = useState<any>(null);
   const router = useRouter();
 
@@ -37,13 +30,9 @@ const Conversation = () => {
         const recognitionInstance = new SpeechRecognition();
         recognitionInstance.lang = "en-US";
 
-        recognitionInstance.onstart = () => {
-          setIsListening(true); // Show listening popup when recognition starts
-        };
-
-        recognitionInstance.onresult = (e: any) => {
+        recognitionInstance.onresult = async (e: any) => {
           const transcript = e.results[0][0].transcript;
-          setUserMsg(transcript);
+          await handleSendMessage(transcript);
         };
 
         recognitionInstance.onerror = (err: any) => {
@@ -51,10 +40,10 @@ const Conversation = () => {
         };
 
         recognitionInstance.onend = () => {
-          setIsListening(false); // Hide listening popup when recognition ends
+          console.log("Speech recognition ended.");
         };
 
-        setRecognition(recognitionInstance); // Set the instance to state
+        setRecognition(recognitionInstance);
       } else {
         console.error(
           "Speech Recognition API is not supported in this browser."
@@ -63,48 +52,40 @@ const Conversation = () => {
     }
   }, []);
 
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-  }
-
   const speak = (text: string) => {
-    const TEXT_TO_SPEECH = new SpeechSynthesisUtterance(text);
-    // Set properties
-    TEXT_TO_SPEECH.volume = 1;
-    TEXT_TO_SPEECH.rate = 1;
-    TEXT_TO_SPEECH.pitch = 1;
-    TEXT_TO_SPEECH.lang = "hi-IN";
-
-    window.speechSynthesis.speak(TEXT_TO_SPEECH);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.volume = 1;
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.lang = "en-US";
+    window.speechSynthesis.speak(utterance);
   };
 
-  const handleAddMessage: any = async () => {
+  const handleSendMessage = async (userMsg: string) => {
     try {
       setLoading(true);
       const res = await axios.post("/api/chat", { prompt: userMsg });
       const data = res.data.result;
+      console.log(data)
 
-      setMessage((prevMsg: any) => [
-        {
-          message: data,
-        },
-        ...prevMsg,
-      ]);
-
-      setLoading(false);
-      setUserMsg("");
+      setMessages((prevMessages) => [data, ...prevMessages]);
+      speak(data);
     } catch (error) {
-      setLoading(false);
-      console.log(error);
-      return;
+      console.error("Error sending message:", error);
     } finally {
       setLoading(false);
       router.refresh();
     }
   };
 
+  const handleMicClick = () => {
+    if (recognition) {
+      recognition.start();
+    }
+  };
+
   return (
-    <div className="md:pl-72 w-full">
+    <div className="md:pl-72 w-full bg-background text-text flex flex-col items-center">
       <Heading
         textColor="text-violet-500"
         bgColor="bg-violet-500/10"
@@ -112,59 +93,34 @@ const Conversation = () => {
         description="Our most advanced conversation model"
         icon={MessageSquare}
       />
-      <div className="w-full relative px-10 mt-5 flex md:flex-row flex-col gap-4">
-        <input
-          value={userMsg}
-          onChange={(e) => setUserMsg(e.target.value)}
-          type="text"
-          placeholder={
-            isListening ? "Listening...." : "What is the area of circle..."
-          }
-          className="py-2 w-full px-4 border rounded-md placeholder:text-black/50 border-gray-400"
-        />
-        <div className="flex justify-center items-center gap-4">
-          <button
-            onClick={() => recognition?.start()}
-            className="px-4 py-2 hover:opacity-80 bg-black/90 text-white rounded-md"
-          >
-            <IoMdMic className="md:text-2xl text-xl" />
-          </button>
-          <Button onClick={handleAddMessage}>Generate</Button>
-        </div>
+      <div className="mt-10 flex flex-col items-center">
+        <FaRobot className="text-9xl text-violet-500" />
       </div>
-
-      {loading ? (
-        <Modal
-          src="https://i.pinimg.com/736x/96/af/8d/96af8d60f3ef5b40a357169293974faf.jpg"
-          alt="Loading"
-          label="Ai is thinking...!!"
-        />
-      ) : messages.length !== 0 ? (
-        <>
-          <div className="flex flex-col px-10 mt-10">
-            {messages.map((msg: MessageProps, index: number) => (
-              <div
-                key={index}
-                className="flex gap-5 bg-gray-200 p-4 mb-4 rounded-md"
-              >
-                <p>{msg.message}</p>
-                <IoMdVolumeHigh
-                  onClick={() => speak(msg.message)}
-                  className="text-2xl text-black ml-2 cursor-pointer hover:opacity-80"
-                />
-              </div>
-            ))}
-          </div>
-        </>
-      ) : (
-        <div className="px-10 mt-10 flex gap-2 items-center flex-col">
-          <Modal
-            src="https://st3.depositphotos.com/16203680/19128/v/1600/depositphotos_191288394-stock-illustration-cartoon-stickmen-chat-empty-speech.jpg"
-            alt="Empty Chats"
-            label="No chat generated...!!"
-          />
-        </div>
-      )}
+      <div className="mt-10 w-full px-10 flex flex-col items-center">
+        {loading ? (
+          <p className="text-violet-500">AI is thinking...</p>
+        ) : (
+          messages.map((msg, index) => (
+            <div
+              key={index}
+              className="flex gap-5 text-text border-2 border-color p-4 mb-4 rounded-md"
+            >
+              <p>{msg}</p>
+            </div>
+          ))
+        )}
+      </div>
+      <div className="fixed bottom-5 flex justify-center w-full">
+        <button
+          onClick={handleMicClick}
+          className="px-4 py-2 hover:opacity-80 bg-secondary-btn text-secondary-btn-text rounded-md flex items-center gap-2"
+        >
+          <IoMdMic className="text-xl" />
+          <span>
+            {loading ? "Listening" : "Tap To Speak"}
+          </span>
+        </button>
+      </div>
     </div>
   );
 };
