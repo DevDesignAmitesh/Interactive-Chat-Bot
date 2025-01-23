@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ArrowRight,
-  Code,
-  Image,
-  MessageSquare,
-} from "lucide-react";
+import { ArrowRight, Code, MessageSquare } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -24,13 +19,6 @@ const DashBoard = () => {
       href: "/code",
       color: "text-green-700",
       bg: "bg-green-700/10",
-    },
-    {
-      label: "Image Generation",
-      icon: Image,
-      href: "/image",
-      color: "text-pink-700",
-      bg: "bg-pink-700/10",
     },
   ];
 

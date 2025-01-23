@@ -2,7 +2,6 @@
 
 import {
   Code,
-  Image,
   LayoutDashboard,
   MessageSquare,
   Zap,
@@ -42,13 +41,7 @@ const SideBar = () => {
       icon: Code,
       href: "/code",
       color: "text-green-700",
-    },
-    {
-      label: "Image Generation",
-      icon: Image,
-      href: "/image",
-      color: "text-pink-700",
-    },
+    }
   ];
 
   const pathName = usePathname();
